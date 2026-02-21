@@ -1,0 +1,25 @@
+.cp-pill {
+  display: inline-block;
+  padding: 0.2rem 0.625rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.cp-pill--valid {
+  border-color: var(--text-secondary);
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.cp-pill--expired {
+  border-color: var(--text-primary);
+  color: var(--text-primary);
+  font-weight: 700;
+  border-width: 2px;
+}

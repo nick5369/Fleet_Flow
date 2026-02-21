@@ -1,0 +1,42 @@
+.eb-container {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.eb-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  border: 1px solid var(--btn-primary-bg);
+  border-radius: 8px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  font-family: inherit;
+}
+
+.eb-btn:hover {
+  opacity: 0.9;
+}
+
+.eb-btn--outline {
+  background: transparent;
+  color: var(--text-primary);
+  border-color: var(--border);
+}
+
+.eb-btn--outline:hover {
+  border-color: var(--text-primary);
+  opacity: 1;
+}
+
+@media print {
+  .eb-container {
+    display: none;
+  }
+}

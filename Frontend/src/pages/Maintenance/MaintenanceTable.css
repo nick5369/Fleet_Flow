@@ -1,0 +1,161 @@
+.mnt-wrapper {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.mnt-scroll {
+  overflow-x: auto;
+}
+
+.mnt-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.84rem;
+  white-space: nowrap;
+}
+
+.mnt-table thead {
+  background: var(--hover-bg);
+}
+
+.mnt-table th {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border);
+}
+
+.mnt-table td {
+  padding: 0.7rem 1rem;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border);
+}
+
+.mnt-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.mnt-table tbody tr:hover {
+  background: var(--hover-bg);
+}
+
+.mnt-log-id {
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  font-family: monospace;
+  font-size: 0.78rem;
+}
+
+.mnt-desc {
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mnt-date {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+}
+
+.mnt-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.mnt-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition:
+    color 0.15s,
+    border-color 0.15s;
+}
+
+.mnt-action-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--text-primary);
+}
+
+.mnt-action-btn--start {
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  border-color: var(--btn-primary-bg);
+}
+
+.mnt-action-btn--start:hover {
+  opacity: 0.9;
+  color: var(--btn-primary-text);
+}
+
+.mnt-empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.mnt-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.mnt-page-info {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.mnt-page-btns {
+  display: flex;
+  gap: 0.375rem;
+}
+
+.mnt-page-btns button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition:
+    color 0.15s,
+    border-color 0.15s;
+}
+
+.mnt-page-btns button:hover:not(:disabled) {
+  color: var(--text-primary);
+  border-color: var(--text-primary);
+}
+
+.mnt-page-btns button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .mnt-wrapper {
+    display: none;
+  }
+}

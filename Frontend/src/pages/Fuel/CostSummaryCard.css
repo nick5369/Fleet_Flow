@@ -1,0 +1,117 @@
+.csc-container {
+  margin-bottom: 1.5rem;
+}
+
+.csc-heading {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin: 0 0 0.75rem;
+}
+
+.csc-loading {
+  text-align: center;
+  padding: 2rem;
+}
+
+.csc-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+}
+
+.csc-card {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.125rem 1rem;
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.csc-card--total {
+  border-width: 2px;
+  border-color: var(--text-primary);
+}
+
+.csc-card-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.csc-card-value {
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.csc-card--total .csc-card-value {
+  font-size: 1.5rem;
+}
+
+.csc-card-count {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.csc-breakdown {
+  margin-top: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.csc-breakdown-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin: 0 0 0.625rem;
+  padding-bottom: 0.375rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.csc-breakdown-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.csc-breakdown-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.25rem 0;
+}
+
+.csc-breakdown-cat {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  text-transform: capitalize;
+}
+
+.csc-breakdown-amt {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+@media (max-width: 900px) {
+  .csc-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .csc-grid {
+    grid-template-columns: 1fr;
+  }
+}

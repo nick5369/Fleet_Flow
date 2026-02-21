@@ -1,0 +1,37 @@
+.dsp-pill {
+  display: inline-block;
+  padding: 0.2rem 0.625rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.dsp-pill--on-duty {
+  border-color: var(--text-primary);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.dsp-pill--off-duty {
+  border-color: var(--text-muted);
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.dsp-pill--suspended {
+  border-color: var(--text-primary);
+  color: var(--text-primary);
+  font-weight: 700;
+  border-width: 2px;
+}
+
+.dsp-pill--on-trip {
+  border-color: var(--text-secondary);
+  color: var(--text-secondary);
+  font-weight: 600;
+}

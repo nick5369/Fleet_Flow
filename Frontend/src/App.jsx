@@ -11,7 +11,12 @@ import Register from "./pages/Register/Register";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Placeholder from "./pages/Placeholder/Placeholder";
 import VehiclesPage from "./pages/Vehicles/VehiclesPage";
+import DriversPage from "./pages/Drivers/DriversPage";
 import TripsPage from "./pages/Trips/TripsPage";
+import MaintenancePage from "./pages/Maintenance/MaintenancePage";
+import FuelPage from "./pages/Fuel/FuelPage";
+import ExpensesPage from "./pages/Expenses/ExpensesPage";
+import ReportsPage from "./pages/Reports/ReportsPage";
 
 function App() {
   return (
@@ -46,23 +51,17 @@ function App() {
             >
               <Route index element={<Dashboard />} />
               <Route path="vehicles" element={<VehiclesPage />} />
-              <Route path="drivers" element={<Placeholder title="Drivers" />} />
+              <Route path="drivers" element={<DriversPage />} />
               <Route path="trips" element={<TripsPage />} />
-              <Route
-                path="maintenance"
-                element={<Placeholder title="Maintenance" />}
-              />
-              <Route path="fuel" element={<Placeholder title="Fuel Logs" />} />
-              <Route
-                path="expenses"
-                element={<Placeholder title="Expenses" />}
-              />
+              <Route path="maintenance" element={<MaintenancePage />} />
+              <Route path="fuel" element={<FuelPage />} />
+              <Route path="expenses" element={<ExpensesPage />} />
               <Route
                 path="dispatch"
                 element={<Placeholder title="Dispatch" />}
               />
               <Route path="safety" element={<Placeholder title="Safety" />} />
-              <Route path="reports" element={<Placeholder title="Reports" />} />
+              <Route path="reports" element={<ReportsPage />} />
             </Route>
 
             <Route path="*" element={<Navigate to="/login" replace />} />

@@ -1,20 +1,204 @@
-// ──────────────────────────────────────────────────────────────
-// FleetFlow — Production Database Schema
-// Target: Neon (Serverless PostgreSQL) + Prisma ORM
-// ──────────────────────────────────────────────────────────────
+generator client {
+  provider = "prisma-client-js"
+}
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-generator client {
-  provider = "prisma-client-js"
+model User {
+  id              String   @id @default(cuid())
+  email           String   @unique
+  password        String   @db.VarChar(255)
+  name            String   @db.VarChar(150)
+  role            UserRole
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  createdTrips    Trip[]   @relation("TripCreatedBy")
+  dispatchedTrips Trip[]   @relation("TripDispatchedBy")
+
+  @@index([role])
+  @@index([isActive, role])
+  @@map("users")
 }
 
-// ──────────────────────────────────────────────────────────────
-// ENUMS
-// ──────────────────────────────────────────────────────────────
+model Vehicle {
+  id              String           @id @default(cuid())
+  licensePlate    String           @unique @db.VarChar(20)
+  vehicleType     VehicleType
+  make            String           @db.VarChar(100)
+  model           String           @db.VarChar(100)
+  year            Int              @db.SmallInt
+  vin             String?          @unique @db.VarChar(17)
+  status          VehicleStatus    @default(AVAILABLE)
+  maxLoadKg       Decimal          @db.Decimal(10, 2)
+  odometerKm      Decimal          @default(0) @db.Decimal(12, 2)
+  acquisitionCost Decimal          @db.Decimal(12, 2)
+  acquisitionDate DateTime         @default(now()) @db.Date
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  expenses        Expense[]
+  fuelLogs        FuelLog[]
+  maintenanceLogs MaintenanceLog[]
+  trips           Trip[]
+
+  @@index([status])
+  @@index([vehicleType, status])
+  @@index([acquisitionDate])
+  @@map("vehicles")
+}
+
+model Driver {
+  id                String          @id @default(cuid())
+  employeeId        String          @unique @db.VarChar(30)
+  firstName         String          @db.VarChar(100)
+  lastName          String          @db.VarChar(100)
+  phone             String          @unique @db.VarChar(20)
+  email             String          @unique
+  licenseNumber     String          @unique @db.VarChar(50)
+  licenseCategory   LicenseCategory
+  licenseExpiryDate DateTime        @db.Date
+  safetyScore       Decimal         @default(100) @db.Decimal(5, 2)
+  status            DriverStatus    @default(OFF_DUTY)
+  hireDate          DateTime        @default(now()) @db.Date
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  fuelLogs          FuelLog[]
+  trips             Trip[]
+
+  @@index([status])
+  @@index([licenseCategory, status])
+  @@index([status, licenseExpiryDate])
+  @@index([safetyScore])
+  @@map("drivers")
+}
+
+model Trip {
+  id                 String     @id @default(cuid())
+  tripNumber         String     @unique @db.VarChar(30)
+  status             TripStatus @default(DRAFT)
+  vehicleId          String
+  driverId           String
+  originAddress      String     @db.VarChar(500)
+  originLat          Decimal?   @db.Decimal(10, 7)
+  originLng          Decimal?   @db.Decimal(10, 7)
+  destinationAddress String     @db.VarChar(500)
+  destinationLat     Decimal?   @db.Decimal(10, 7)
+  destinationLng     Decimal?   @db.Decimal(10, 7)
+  distanceKm         Decimal?   @db.Decimal(10, 2)
+  cargoDescription   String?    @db.VarChar(500)
+  cargoWeightKg      Decimal    @db.Decimal(10, 2)
+  odometerStartKm    Decimal?   @db.Decimal(12, 2)
+  odometerEndKm      Decimal?   @db.Decimal(12, 2)
+  scheduledAt        DateTime
+  dispatchedAt       DateTime?
+  completedAt        DateTime?
+  cancelledAt        DateTime?
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
+  createdById        String?
+  dispatchedById     String?
+  notes              String?
+  expenses           Expense[]
+  fuelLogs           FuelLog[]
+  createdBy          User?      @relation("TripCreatedBy", fields: [createdById], references: [id])
+  dispatchedBy       User?      @relation("TripDispatchedBy", fields: [dispatchedById], references: [id])
+  driver             Driver     @relation(fields: [driverId], references: [id])
+  vehicle            Vehicle    @relation(fields: [vehicleId], references: [id])
+
+  @@index([status, scheduledAt])
+  @@index([vehicleId, status])
+  @@index([driverId, status])
+  @@index([completedAt])
+  @@index([createdAt])
+  @@index([createdById])
+  @@index([dispatchedById])
+  @@map("trips")
+}
+
+model MaintenanceLog {
+  id                  String              @id @default(cuid())
+  vehicleId           String
+  type                MaintenanceType
+  priority            MaintenancePriority @default(MEDIUM)
+  status              MaintenanceStatus   @default(SCHEDULED)
+  description         String
+  odometerAtServiceKm Decimal?            @db.Decimal(12, 2)
+  laborCost           Decimal             @default(0) @db.Decimal(10, 2)
+  partsCost           Decimal             @default(0) @db.Decimal(10, 2)
+  scheduledDate       DateTime            @db.Date
+  startedAt           DateTime?
+  completedAt         DateTime?
+  vendorName          String?             @db.VarChar(200)
+  invoiceNumber       String?             @db.VarChar(100)
+  notes               String?
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+  expenses            Expense[]
+  vehicle             Vehicle             @relation(fields: [vehicleId], references: [id])
+
+  @@index([vehicleId, status])
+  @@index([vehicleId, type])
+  @@index([status, scheduledDate])
+  @@index([completedAt])
+  @@map("maintenance_logs")
+}
+
+model FuelLog {
+  id               String   @id @default(cuid())
+  vehicleId        String
+  driverId         String?
+  tripId           String?
+  fuelType         FuelType
+  liters           Decimal  @db.Decimal(8, 2)
+  costPerLiter     Decimal  @db.Decimal(8, 4)
+  totalCost        Decimal  @db.Decimal(10, 2)
+  odometerAtFillKm Decimal  @db.Decimal(12, 2)
+  stationName      String?  @db.VarChar(200)
+  stationAddress   String?  @db.VarChar(500)
+  filledAt         DateTime @default(now())
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  expense          Expense?
+  driver           Driver?  @relation(fields: [driverId], references: [id])
+  trip             Trip?    @relation(fields: [tripId], references: [id])
+  vehicle          Vehicle  @relation(fields: [vehicleId], references: [id])
+
+  @@index([vehicleId, filledAt])
+  @@index([driverId])
+  @@index([tripId])
+  @@index([filledAt])
+  @@map("fuel_logs")
+}
+
+model Expense {
+  id               String          @id @default(cuid())
+  category         ExpenseCategory
+  description      String          @db.VarChar(500)
+  amount           Decimal         @db.Decimal(12, 2)
+  vehicleId        String?
+  tripId           String?
+  maintenanceLogId String?
+  fuelLogId        String?         @unique
+  receiptUrl       String?
+  incurredAt       DateTime        @default(now())
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  fuelLog          FuelLog?        @relation(fields: [fuelLogId], references: [id])
+  maintenanceLog   MaintenanceLog? @relation(fields: [maintenanceLogId], references: [id])
+  trip             Trip?           @relation(fields: [tripId], references: [id])
+  vehicle          Vehicle?        @relation(fields: [vehicleId], references: [id])
+
+  @@index([vehicleId, category])
+  @@index([vehicleId, incurredAt])
+  @@index([category, incurredAt])
+  @@index([tripId])
+  @@index([maintenanceLogId])
+  @@index([incurredAt])
+  @@map("expenses")
+}
 
 enum UserRole {
   MANAGER
@@ -94,274 +278,4 @@ enum ExpenseCategory {
   PARKING
   FINE
   OTHER
-}
-
-// ──────────────────────────────────────────────────────────────
-// USER — Authentication & Role-Based Access
-// ──────────────────────────────────────────────────────────────
-
-model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  password  String   @db.VarChar(255) // bcrypt hash — never plaintext
-  name      String   @db.VarChar(150)
-  role      UserRole
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // Audit: who created/dispatched trips
-  createdTrips    Trip[] @relation("TripCreatedBy")
-  dispatchedTrips Trip[] @relation("TripDispatchedBy")
-
-  @@index([role])
-  @@index([isActive, role])
-  @@map("users")
-}
-
-// ──────────────────────────────────────────────────────────────
-// VEHICLE — Fleet Asset Registry
-// ──────────────────────────────────────────────────────────────
-
-model Vehicle {
-  id              String        @id @default(cuid())
-  licensePlate    String        @unique @db.VarChar(20)
-  vehicleType     VehicleType
-  make            String        @db.VarChar(100)
-  model           String        @db.VarChar(100)
-  year            Int           @db.SmallInt
-  vin             String?       @unique @db.VarChar(17) // Vehicle Identification Number
-  status          VehicleStatus @default(AVAILABLE)
-  maxLoadKg       Decimal       @db.Decimal(10, 2) // must be > 0 — enforce via CHECK constraint in migration
-  odometerKm      Decimal       @default(0) @db.Decimal(12, 2) // must be ≥ 0
-  acquisitionCost Decimal       @db.Decimal(12, 2)
-  acquisitionDate DateTime      @default(now()) @db.Date
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
-
-  // Relations
-  trips           Trip[]
-  maintenanceLogs MaintenanceLog[]
-  fuelLogs        FuelLog[]
-  expenses        Expense[]
-
-  @@index([status])
-  @@index([vehicleType, status])
-  @@index([acquisitionDate])
-  @@map("vehicles")
-}
-
-// ──────────────────────────────────────────────────────────────
-// DRIVER — Personnel Registry
-// ──────────────────────────────────────────────────────────────
-
-model Driver {
-  id                String          @id @default(cuid())
-  employeeId        String          @unique @db.VarChar(30)
-  firstName         String          @db.VarChar(100)
-  lastName          String          @db.VarChar(100)
-  phone             String          @unique @db.VarChar(20)
-  email             String          @unique
-  licenseNumber     String          @unique @db.VarChar(50)
-  licenseCategory   LicenseCategory
-  licenseExpiryDate DateTime        @db.Date
-  safetyScore       Decimal         @default(100) @db.Decimal(5, 2) // 0.00–100.00
-  status            DriverStatus    @default(OFF_DUTY)
-  hireDate          DateTime        @default(now()) @db.Date
-  createdAt         DateTime        @default(now())
-  updatedAt         DateTime        @updatedAt
-
-  // Relations
-  trips    Trip[]
-  fuelLogs FuelLog[]
-
-  @@index([status])
-  @@index([licenseCategory, status])
-  @@index([status, licenseExpiryDate])
-  @@index([safetyScore])
-  @@map("drivers")
-}
-
-// ──────────────────────────────────────────────────────────────
-// TRIP — Core Operational Entity
-// ──────────────────────────────────────────────────────────────
-
-model Trip {
-  id         String     @id @default(cuid())
-  tripNumber String     @unique @db.VarChar(30) // app-generated: e.g. TRP-20260221-0001
-  status     TripStatus @default(DRAFT)
-
-  // Assignment (exactly one vehicle + one driver)
-  vehicleId String
-  vehicle   Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Restrict)
-  driverId  String
-  driver    Driver  @relation(fields: [driverId], references: [id], onDelete: Restrict)
-
-  // Route
-  originAddress      String   @db.VarChar(500)
-  originLat          Decimal? @db.Decimal(10, 7)
-  originLng          Decimal? @db.Decimal(10, 7)
-  destinationAddress String   @db.VarChar(500)
-  destinationLat     Decimal? @db.Decimal(10, 7)
-  destinationLng     Decimal? @db.Decimal(10, 7)
-  distanceKm         Decimal? @db.Decimal(10, 2)
-
-  // Cargo
-  cargoDescription String? @db.VarChar(500)
-  cargoWeightKg    Decimal @db.Decimal(10, 2) // must ≤ vehicle.maxLoadKg — enforce in app layer
-
-  // Odometer snapshots
-  odometerStartKm Decimal? @db.Decimal(12, 2)
-  odometerEndKm   Decimal? @db.Decimal(12, 2)
-
-  // Timestamps
-  scheduledAt  DateTime
-  dispatchedAt DateTime?
-  completedAt  DateTime?
-  cancelledAt  DateTime?
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-
-  // Audit trail
-  createdById    String?
-  createdBy      User?   @relation("TripCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
-  dispatchedById String?
-  dispatchedBy   User?   @relation("TripDispatchedBy", fields: [dispatchedById], references: [id], onDelete: SetNull)
-
-  // Notes
-  notes String?
-
-  // Relations
-  fuelLogs FuelLog[]
-  expenses Expense[]
-
-  @@index([status, scheduledAt])
-  @@index([vehicleId, status])
-  @@index([driverId, status])
-  @@index([completedAt])
-  @@index([createdAt])
-  @@index([createdById])
-  @@index([dispatchedById])
-  @@map("trips")
-}
-
-// ──────────────────────────────────────────────────────────────
-// MAINTENANCE LOG — Service & Repair Records
-// ──────────────────────────────────────────────────────────────
-
-model MaintenanceLog {
-  id        String  @id @default(cuid())
-  vehicleId String
-  vehicle   Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Restrict)
-
-  type                MaintenanceType
-  priority            MaintenancePriority @default(MEDIUM)
-  status              MaintenanceStatus   @default(SCHEDULED)
-  description         String
-  odometerAtServiceKm Decimal?            @db.Decimal(12, 2)
-
-  // Cost
-  laborCost Decimal @default(0) @db.Decimal(10, 2)
-  partsCost Decimal @default(0) @db.Decimal(10, 2)
-
-  // Scheduling
-  scheduledDate DateTime  @db.Date
-  startedAt     DateTime?
-  completedAt   DateTime?
-
-  // Vendor
-  vendorName    String? @db.VarChar(200)
-  invoiceNumber String? @db.VarChar(100)
-
-  notes     String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // Linked expense
-  expenses Expense[]
-
-  @@index([vehicleId, status])
-  @@index([vehicleId, type])
-  @@index([status, scheduledDate])
-  @@index([completedAt])
-  @@map("maintenance_logs")
-}
-
-// ──────────────────────────────────────────────────────────────
-// FUEL LOG — Refueling Events
-// ──────────────────────────────────────────────────────────────
-
-model FuelLog {
-  id String @id @default(cuid())
-
-  vehicleId String
-  vehicle   Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Restrict)
-
-  driverId String?
-  driver   Driver? @relation(fields: [driverId], references: [id], onDelete: SetNull)
-
-  tripId String?
-  trip   Trip?   @relation(fields: [tripId], references: [id], onDelete: SetNull)
-
-  // Fueling details
-  fuelType         FuelType
-  liters           Decimal  @db.Decimal(8, 2)
-  costPerLiter     Decimal  @db.Decimal(8, 4)
-  totalCost        Decimal  @db.Decimal(10, 2)
-  odometerAtFillKm Decimal  @db.Decimal(12, 2)
-
-  // Location
-  stationName    String? @db.VarChar(200)
-  stationAddress String? @db.VarChar(500)
-
-  filledAt  DateTime @default(now())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // Linked expense
-  expense Expense?
-
-  @@index([vehicleId, filledAt])
-  @@index([driverId])
-  @@index([tripId])
-  @@index([filledAt])
-  @@map("fuel_logs")
-}
-
-// ──────────────────────────────────────────────────────────────
-// EXPENSE — Unified Financial Ledger
-// ──────────────────────────────────────────────────────────────
-
-model Expense {
-  id          String          @id @default(cuid())
-  category    ExpenseCategory
-  description String          @db.VarChar(500)
-  amount      Decimal         @db.Decimal(12, 2)
-
-  // Polymorphic references — at least one should be set
-  vehicleId String?
-  vehicle   Vehicle? @relation(fields: [vehicleId], references: [id], onDelete: SetNull)
-
-  tripId String?
-  trip   Trip?   @relation(fields: [tripId], references: [id], onDelete: SetNull)
-
-  maintenanceLogId String?
-  maintenanceLog   MaintenanceLog? @relation(fields: [maintenanceLogId], references: [id], onDelete: SetNull)
-
-  fuelLogId String?  @unique // 1:1 with FuelLog when category=FUEL
-  fuelLog   FuelLog? @relation(fields: [fuelLogId], references: [id], onDelete: SetNull)
-
-  // Metadata
-  receiptUrl String?
-  incurredAt DateTime @default(now())
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  @@index([vehicleId, category])
-  @@index([vehicleId, incurredAt])
-  @@index([category, incurredAt])
-  @@index([tripId])
-  @@index([maintenanceLogId])
-  @@index([incurredAt])
-  @@map("expenses")
 }

@@ -3,13 +3,13 @@
 // Target: Neon (Serverless PostgreSQL) + Prisma ORM
 // ──────────────────────────────────────────────────────────────
 
-generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["fullTextSearchPostgres"]
-}
-
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
 }
 
 // ──────────────────────────────────────────────────────────────

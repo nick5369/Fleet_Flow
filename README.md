@@ -4,6 +4,11 @@ Fleet management system for tracking vehicles, drivers, trips, maintenance, fuel
 
 Built with a **React** frontend (Vite + Tailwind CSS) and an **Express.js** backend (Prisma ORM + PostgreSQL).
 
+### Live URLs
+
+- **Frontend:** https://flow-fleet.vercel.app
+- **Backend:** https://backend-fdcm.onrender.com
+
 ---
 
 ## Table of Contents
@@ -303,7 +308,3 @@ Authorization: Bearer <token>
 | `FINANCE_ANALYST` | Read access to vehicles. |
 
 ---
-
-## License
-
-ISC

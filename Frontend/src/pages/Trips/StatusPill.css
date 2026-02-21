@@ -1,0 +1,37 @@
+.sp-pill {
+  display: inline-block;
+  padding: 0.2rem 0.625rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.sp-pill--draft {
+  border-color: var(--text-muted);
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.sp-pill--dispatched {
+  border-color: var(--text-primary);
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+.sp-pill--completed {
+  border-color: var(--text-secondary);
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.sp-pill--cancelled {
+  border-color: var(--border);
+  color: var(--text-muted);
+  font-weight: 400;
+  text-decoration: line-through;
+}

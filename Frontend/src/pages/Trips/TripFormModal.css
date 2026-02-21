@@ -1,0 +1,194 @@
+.tfm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.tfm-modal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow);
+}
+
+.tfm-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.tfm-header h2 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.tfm-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.tfm-close:hover {
+  background: var(--hover-bg);
+  color: var(--text-primary);
+}
+
+.tfm-error {
+  margin: 0.75rem 1.5rem 0;
+  padding: 0.625rem 0.875rem;
+  border-radius: 6px;
+  background: var(--error-bg, #fef2f2);
+  border: 1px solid var(--error-border, #fecaca);
+  color: var(--error-text, #991b1b);
+  font-size: 0.8125rem;
+}
+
+.tfm-form {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.tfm-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.tfm-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.tfm-field--full {
+  grid-column: 1 / -1;
+}
+
+.tfm-field label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.tfm-field input,
+.tfm-field select,
+.tfm-field textarea {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  background: var(--input-bg);
+  transition: border 0.15s;
+  font-family: inherit;
+}
+
+.tfm-field textarea {
+  resize: vertical;
+  min-height: 2.5rem;
+}
+
+.tfm-field input:focus,
+.tfm-field select:focus,
+.tfm-field textarea:focus {
+  outline: none;
+  border-color: var(--text-primary);
+}
+
+.tfm-field input::placeholder,
+.tfm-field textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.tfm-hint {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 0.125rem;
+}
+
+.tfm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border);
+  margin-top: 0.5rem;
+}
+
+.tfm-btn-cancel,
+.tfm-btn-save {
+  padding: 0.5rem 1.25rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.tfm-btn-cancel {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+
+.tfm-btn-cancel:hover {
+  background: var(--hover-bg);
+  color: var(--text-primary);
+}
+
+.tfm-btn-save {
+  background: var(--btn-primary-bg);
+  border: 1px solid var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+}
+
+.tfm-btn-save:hover {
+  opacity: 0.9;
+}
+
+.tfm-btn-save:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 540px) {
+  .tfm-row {
+    grid-template-columns: 1fr;
+  }
+
+  .tfm-modal {
+    max-width: 100%;
+    border-radius: 8px;
+  }
+
+  .tfm-form {
+    padding: 1rem;
+  }
+
+  .tfm-header {
+    padding: 1rem;
+  }
+}

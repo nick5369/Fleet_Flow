@@ -1,4 +1,5 @@
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
+const API_BASE =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
 
 async function request(endpoint, options = {}) {
   const token = localStorage.getItem("token");
@@ -11,7 +12,8 @@ async function request(endpoint, options = {}) {
   });
 
   const data = await res.json();
-  if (!res.ok) throw { status: res.status, message: data.message || "Request failed" };
+  if (!res.ok)
+    throw { status: res.status, message: data.message || "Request failed" };
   return data;
 }
 
@@ -40,7 +42,10 @@ export const vehicleAPI = {
   create: (payload) =>
     request("/vehicles", { method: "POST", body: JSON.stringify(payload) }),
   update: (id, payload) =>
-    request(`/vehicles/${id}`, { method: "PATCH", body: JSON.stringify(payload) }),
+    request(`/vehicles/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(payload),
+    }),
 };
 
 export const driverAPI = {
@@ -53,5 +58,25 @@ export const driverAPI = {
   create: (payload) =>
     request("/drivers", { method: "POST", body: JSON.stringify(payload) }),
   update: (id, payload) =>
-    request(`/drivers/${id}`, { method: "PATCH", body: JSON.stringify(payload) }),
+    request(`/drivers/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(payload),
+    }),
+};
+
+export const tripAPI = {
+  list: (params = {}) => {
+    const query = new URLSearchParams(params).toString();
+    return request(`/trips${query ? `?${query}` : ""}`);
+  },
+  getById: (id) => request(`/trips/${id}`),
+  create: (payload) =>
+    request("/trips", { method: "POST", body: JSON.stringify(payload) }),
+  dispatch: (id) => request(`/trips/${id}/dispatch`, { method: "PATCH" }),
+  complete: (id, payload) =>
+    request(`/trips/${id}/complete`, {
+      method: "PATCH",
+      body: JSON.stringify(payload),
+    }),
+  cancel: (id) => request(`/trips/${id}/cancel`, { method: "PATCH" }),
 };

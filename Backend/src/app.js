@@ -5,6 +5,7 @@ const authRoutes = require("./modules/auth/auth.routes");
 const vehicleRoutes = require("./modules/vehicle/vehicle.routes");
 const driverRoutes = require("./modules/driver/driver.routes");
 const tripRoutes = require("./modules/trip/trip.routes");
+const maintenanceRoutes = require("./modules/maintenance/maintenance.routes");
 const morgan = require("morgan");
 
 const app = express();
@@ -18,6 +19,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/vehicles", vehicleRoutes);
 app.use("/api/drivers", driverRoutes);
 app.use("/api/trips", tripRoutes);
+app.use("/api/maintenance", maintenanceRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ success: false, message: "Route not found" });

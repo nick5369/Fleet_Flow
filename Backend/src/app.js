@@ -8,6 +8,7 @@ const tripRoutes = require("./modules/trip/trip.routes");
 const maintenanceRoutes = require("./modules/maintenance/maintenance.routes");
 const fuelLogRoutes = require("./modules/fuel-log/fuel-log.routes");
 const expenseRoutes = require("./modules/expense/expense.routes");
+const analyticsRoutes = require("./modules/analytics/analytics.routes");
 const morgan = require("morgan");
 
 const app = express();
@@ -24,6 +25,7 @@ app.use("/api/trips", tripRoutes);
 app.use("/api/maintenance", maintenanceRoutes);
 app.use("/api/fuel-logs", fuelLogRoutes);
 app.use("/api/expenses", expenseRoutes);
+app.use("/api/analytics", analyticsRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ success: false, message: "Route not found" });
